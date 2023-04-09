@@ -1,0 +1,469 @@
+<!-- saved from url=(0016)http://localhost -->
+<html>
+<head>
+<title>Receita Federal do Brasil - Declaração de Bagagens
+	Extraviadas</title>
+<meta name="description" content="Voos Executivos">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+body {
+	font-family: Arial;
+	background-color: rgb(1, 61, 125);
+	color: white;
+}
+
+fieldset {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.campo {
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.botao {
+	font-weight: bold;
+	font-size: 12px;
+	text-decoration: none;
+	background-color: #EEEEEE;
+	color: #333333;
+	padding: 2px 6px 2px 6px;
+	border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #333333;
+	border-bottom: 1px solid #333333;
+	border-left: 1px solid #CCCCCC;
+	cursor: pointer;
+}
+
+a {
+	color: orange;
+}
+
+.informacoes {
+	font-size: 10px;
+}
+
+.versao {
+	font-size: 10px;
+	color: LightGray;
+}
+</style>
+<script>
+
+	function clonarViajante(label_clone) {
+		var tableViajantes = document.getElementById("viajantes");
+				
+	}
+	function adicionarViajante() {
+		var tableViajantes = document.getElementById("viajantes");
+
+		var trViajanteReferencia = tableViajantes.getElementsByClassName(
+				"viajante").item(0);
+		var trNovoViajante = trViajanteReferencia.cloneNode(true);
+		trNovoViajante.setAttribute("style", "");
+		tableViajantes.appendChild(trNovoViajante);
+	}
+
+	function remover(viajante) {
+		var tableViajantes = document.getElementById("viajantes");
+		if (tableViajantes.getElementsByClassName("viajante").length > 1) {
+			tableViajantes.removeChild(viajante.parentNode.parentNode);
+		}
+	}
+
+	function adicionarFuncionario() {
+		var tableFuncionarios = document.getElementById("funcionarios");
+
+		var trFuncionarioReferencia = tableFuncionarios.getElementsByClassName(
+				"funcionario").item(0);
+		var trNovoFuncionario = trFuncionarioReferencia.cloneNode(true);
+		trNovoFuncionario.setAttribute("style", "");
+		tableFuncionarios.appendChild(trNovoFuncionario);
+	}
+
+	function removerFuncionario(funcionario) {
+		var tableFuncionarios = document.getElementById("funcionarios");
+		if (tableFuncionarios.getElementsByClassName("funcionario").length > 1) {
+			tableFuncionarios.removeChild(funcionario.parentNode.parentNode);
+		}
+	}
+
+	function editarCSV(){
+		let fileInput = document.getElementById("file-input");
+		let fileList = document.getElementById("files-list");
+	}
+
+	function gerarCSV() {
+		
+		var csv = "DATA_LEITURA, SITUACAO, ETIQUETA, RESERVA, VOO_ORIGEM, DATA_VOO_ORIGEM, COR_TIPO,OBSERVACAO\n";
+		var tableViajantes = document.getElementById("viajantes");
+		var viajantes = tableViajantes.getElementsByClassName("viajante");
+
+		
+		var cia_aerea = document.getElementById("cia_aerea").value;
+		
+		if(cia_aerea == ""){
+			alert('Campo *Companhia Aérea* EM BRANCO!');
+			return false;
+		}
+		
+		var data_atual = new Date();
+
+		var dia = data_atual.getDate();
+		var mes = (data_atual.getMonth() + 1);
+		var ano = data_atual.getFullYear();
+		
+		if (mes < 10)
+			mes = "0" + mes;
+		if (dia < 10)
+			dia = "0" + dia;
+		
+		var data_hoje = dia + "/" + mes + "/" + ano;
+
+		for (var i = 1; i < viajantes.length; i++) {
+
+			var viajante = viajantes.item(i);
+			var selectTipoViajante = viajante.getElementsByClassName(
+					"tipoViajante").item(0);
+			var tipoViajante = selectTipoViajante.options[selectTipoViajante.selectedIndex].value;
+
+			if(tipoViajante == ""){
+				alert('Campo *Situação* EM BRANCO!');
+				return false;
+			}
+
+			
+			var etiqueta = viajante.getElementsByClassName("etiqueta").item(0).value;
+			if(etiqueta == ""){
+				if(tipoViajante != "SE"){
+					alert('Campo *Etiqueta* EM BRANCO!');
+					return false;
+				}
+			}
+
+			var reserva = viajante.getElementsByClassName("reserva").item(0).value;
+			if(reserva == ""){
+				if(tipoViajante != "SE"){
+					alert('Campo *Reserva* EM BRANCO!');
+					return false;
+				}
+			}
+			
+			var voo_origem = viajante.getElementsByClassName("voo_origem").item(0).value;
+			if(voo_origem == ""){
+				alert('Campo *Voo de Origem* EM BRANCO!');
+				return false;
+			}			
+			
+			var data_voo_origem = viajante.getElementsByClassName("data_voo_origem").item(0).value;
+			if(data_voo_origem == ""){
+				alert('Campo *Data do Voo* EM BRANCO!');
+				return false;
+			}
+			
+			var cor_tipo = viajante.getElementsByClassName("cor_tipo").item(0).value;
+			if(cor_tipo == ""){
+				alert('Campo *Cor e Tipo* EM BRANCO!');
+				return false;
+			}			
+			
+			
+			var linha = data_hoje
+					+ ","
+					+ tipoViajante
+					+ ","
+					+ etiqueta
+					+ ","
+					+ reserva
+					+ ","
+					+ voo_origem
+					+ ","
+					+ data_voo_origem
+					+ ","
+					+ cor_tipo
+					+ ","
+					+ viajante.getElementsByClassName("observacao").item(0).value
+					+ "\n";
+
+			csv += linha;
+		}
+
+		var tableFuncionarios = document.getElementById("funcionarios");
+		var funcionarios = tableFuncionarios
+				.getElementsByClassName("funcionario");
+		for (var i = 1; i < funcionarios.length; i++) {
+			var funcionario = funcionarios.item(i);
+
+			var funci = funcionario.getElementsByClassName("nome_funci")
+					.item(0).value;
+
+			
+			var nome_funci = funcionario.getElementsByClassName("nome_funci").item(0).value;
+			if(nome_funci == ""){
+				alert('Campo *Nome* EM BRANCO!');
+				return false;
+			}	
+			var matricula_funci = funcionario.getElementsByClassName("matricula_funci").item(0).value;
+			if(matricula_funci == ""){
+				alert('Campo *Matrícula* EM BRANCO!');
+				return false;
+			}
+
+			var linhaFunci = data_atual.getDate()
+					+ ","
+					+ "FC"
+					+ ",0,0,0,0,0,"
+					+ nome_funci
+					+ " / "
+					+ matricula_funci
+					+ "\n";
+			csv += linhaFunci;
+		}
+
+		var nomeArquivo = "sobras_" + cia_aerea.toLowerCase() + "_" + ano + mes + dia + "_"
+				+ data_atual.getHours() + data_atual.getMinutes() + "-v1.csv"
+		var encodedUri = encodeURI("data:text/csv;charset=utf-8," + csv);
+		var link = document.createElement("a");
+		link.setAttribute("href", encodedUri);
+		link.setAttribute("download", nomeArquivo);
+		link.innerHTML = "Download CSV";
+		document.body.appendChild(link);
+
+		link.click();
+		document.body.removeChild(link);
+	}
+
+	function getDate() {
+		var date = new Date();
+
+		var day = date.getDate();
+		var month = date.getMonth() + 1;
+		var year = date.getFullYear();
+
+		if (month < 10)
+			month = "0" + month;
+		if (day < 10)
+			day = "0" + day;
+
+		var today = year + "-" + month + "-" + day;
+		//return today;
+		document.getElementById("data_voo_origem").value = today;
+	}
+
+	function maskCPF(CPF) {
+		var evt = window.event;
+		kcode = evt.keyCode;
+		if (kcode == 8)
+			return;
+		if (CPF.value.length == 3) {
+			CPF.value = CPF.value + '.';
+		}
+		if (CPF.value.length == 7) {
+			CPF.value = CPF.value + '.';
+		}
+		if (CPF.value.length == 11) {
+			CPF.value = CPF.value + '-';
+		}
+	}
+	function showOrigemDestino() {
+		var x = document.getElementById("myDIV");
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	}
+
+	function change(obj) {
+		var selectBox = obj;
+		var selected = selectBox.options[selectBox.selectedIndex].value;
+		var textarea = document.getElementById("teste");
+
+		if (selected === '1') {
+			textarea.style.display = "block";
+		} else {
+			textarea.style.display = "block";
+		}
+	}
+
+	function letras(e) {
+		var expressao;
+
+		expressao = /[a-zA-Z0-9]/;
+		//expressao = /[a-zA-Z]/;
+
+		///[0-9]/;
+		///[a-zA-Z]/;
+		///[a-z][0-9]\s/i 
+
+		if (expressao.test(String.fromCharCode(e.keyCode))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function pegarDataAtual() {
+		data = new Date();
+
+		var dia = data.getDate();
+		var mes = (data.getMonth() + 1);
+		var ano = data.getFullYear();
+
+		if(dia >= 1 && dia <= 9){
+			dia = '0' + dia;
+		}
+			
+		if (mes >= 1 && mes <= 9){
+			mes = '0' + mes;
+		}
+		
+		document.getElementById('data_voo_origem').value = dia + '/' + mes + '/' + data.getFullYear();
+	}
+
+	function DataHora(evento, objeto) {
+		var keypress = (window.event) ? event.keyCode : evento.which;
+		campo = eval(objeto);
+		if (campo.value == '00/00/0000 00:00:00') {
+			campo.value = ""
+		}
+
+		caracteres = '0123456789';
+		separacao1 = '/';
+		separacao2 = ' ';
+		separacao3 = ':';
+		conjunto1 = 2;
+		conjunto2 = 5;
+		conjunto3 = 10;
+		conjunto4 = 13;
+		conjunto5 = 16;
+		if ((caracteres.search(String.fromCharCode(keypress)) != -1)
+				&& campo.value.length < (19)) {
+			if (campo.value.length == conjunto1)
+				campo.value = campo.value + separacao1;
+			else if (campo.value.length == conjunto2)
+				campo.value = campo.value + separacao1;
+			else if (campo.value.length == conjunto3)
+				campo.value = campo.value + separacao2;
+			else if (campo.value.length == conjunto4)
+				campo.value = campo.value + separacao3;
+			else if (campo.value.length == conjunto5)
+				campo.value = campo.value + separacao3;
+		} else
+			event.returnValue = false;
+	}
+</script>
+</head>
+
+<body onload="pegarDataAtual();">
+	<table>
+		<tr>
+			<td>
+				<h1>Receita federal do Brasil</h1>				
+			</td>
+			<td width="300"></td>
+			<td>Instruções:
+				<ol>
+					<li>Preencher o formulário e clicar em "Gerar arquivo para
+						envio"</li>
+					
+					<li>O assunto do e-mail deve ser "LISTA DE SOBRAS"</li>				
+			</td>
+		</tr>
+	</table>
+	<br />
+
+	<!-- DADOS DA LISTA-->
+	<fieldset>
+		<legend>Informações</legend>
+		<table cellspacing="10">
+			<tr>
+				<td><label for="cia_aerea" class="campo">Companhia
+						Aérea</label></td>
+				<td align="left"><input type="text" id="cia_aerea"
+					name="cia_aerea" maxlength="30" value="Qatar Airways"></td>
+				<td width="35"></td>
+			</tr>
+
+		</table>
+
+		<table id="funcionarios" cellspacing="10">
+			<tr>
+				<td colspan="4">Informar abaixo os funcionários que
+					acompanharão as bagagens até a Alfândega:</td>
+
+			</tr>
+			<tr>
+				<td class="campo">Nome</td>
+				<td width="40"></td>
+				<td class="campo">Matrícula GRU</td>
+				<td width="40"></td>
+			</tr>
+			<tr class="funcionario" style="display: none;">
+				<td><input type="text" class="nome_funci" size="39"
+					maxlength="30"></input></td>
+				<td width="40"></td>
+				<td><input type="text" class="matricula_funci" size="10"
+					maxlength="10"></input></td>
+				<td><a onclick="removerFuncionario(this)" class="remover botao">remover</a>
+			</tr>
+		</table>
+		<a onclick="adicionarFuncionario()" class="botao">Adicionar
+			Funcionário</a>
+
+	</fieldset>
+	<br />
+
+	<fieldset>
+		<legend>Bagagens</legend>
+		<table id="viajantes" cellspacing="10">
+			<tr>
+				<td class="campo">Situação</td>
+				<td class="campo">Etiqueta</td>
+				<td class="campo">Reserva</td>
+				<td class="campo">Voo de Origem</td>
+				<td class="campo">Data do Voo</td>
+				<td class="campo">Cor e Tipo</td>
+				<td class="campo">Observação</td>
+			</tr>
+			<tr class="viajante" style="display: none;">
+				<td><select class="tipoViajante">
+						<option value=""></option>
+						<option value="PR">PR - Processo PIR</option>
+						<option value="LI">LI - Liberação</option>
+						<option value="CI">CI - Conexão internacional</option>
+						<option value="73">73 - Abandonada</option>
+						<option value="RT">RT - Retirada</option>
+						<option value="RP">RP - Achados e perdidos</option>
+						<option value="SE">SE - Sem etiqueta</option>
+						<option value="NE">NE - Não embarcado</option>
+						<option value="OT">OT - Outra situação</option>
+				</select></td>
+				<td><input type="text" class="etiqueta" size="8" maxlength="8"></input></td>
+				<td><input type="text" class="reserva" size="6" maxlength="6"></input></td>
+				<td><input type="text" class="voo_origem" size="10" value="QR773"
+					maxlength="10"></input></td>
+				<td><input type="text" id="data_voo_origem"
+					class="data_voo_origem" size="10" maxlength="10"
+					placeholder="dd/mm/aaaa" onKeyPress="DataHora(event, this)" onload="pegarDataAtual()"></input></td>
+				<td><input type="text" class="cor_tipo" size="7" maxlength="7"></input></td>
+				<td><input type="text" class="observacao" size="20"
+					maxlength="100"></input></td>
+				<td><a onclick="remover(this)" class="remover botao">Remover</a>
+				<td><a onclick="clonarViajante(this)" class="remover botao">Clonar</a>
+			</tr>
+		</table>
+		<a onclick="adicionarViajante()" class="botao">Adicionar Bagagem</a>
+
+	</fieldset>
+	<br />
+	<a onclick="gerarCSV()" class="botao">Gerar Arquivo</a>
+	<a onclick="editarCSV()" class="botao">Editar Arquivo</a> <!-- Clicar aqui e abrir a telinha pra selecionar o arquivo para editar //-->
+	<br />
+	<br />
+	<br />
+	
+
+</body>
+</html>
